@@ -1,25 +1,19 @@
+import React from "react";
 import logo from './logo.svg';
 import './App.css';
+import CostsApplication from "./costs-application";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <>
+            <div className="flex justify-center">
+                <span className="self-center text-purple-300 italic">Welcome to</span>
+                <img src={logo} className="App-logo" alt="logo"/>
+                <span className="self-center text-purple-300 italic"> Costs application</span>
+            </div>
+            <CostsApplication/>
+        </>
+    );
 }
 
 export default App;
