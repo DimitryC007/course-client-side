@@ -1,7 +1,7 @@
 import React from "react";
 import {useState, useEffect, useCallback} from "react";
 import * as constants from "./constants";
-import {openDatabase, addItem, getAllItems} from "./persistence/idb";
+import {openDatabase, addItem, getAllItems} from "./persistence";
 
 export default function CostsApplication() {
     const [name, setName] = useState('');
@@ -19,25 +19,28 @@ export default function CostsApplication() {
     const [filteredItems, setFilteredItems] = useState([]);
 
 
-    useEffect(() => {
-        setFilteredItems(items);
-    }, [items]);
+    const handleFilteredItems = useCallback(() => {
+        let tempItems = [...items];
 
-    useEffect(() => {
-        let tempItems =  [...items];
-
-        if(yearFilter !== -1)
-        {
+        if (yearFilter !== -1) {
             tempItems = tempItems.filter(x => x.year === yearFilter);
         }
 
-        if(monthFilter !== -1)
-        {
+        if (monthFilter !== -1) {
             tempItems = tempItems.filter(x => x.month === monthFilter);
         }
 
         setFilteredItems(tempItems);
-    }, [yearFilter,monthFilter]);
+    }, [items, monthFilter, yearFilter]);
+
+    useEffect(() => {
+        handleFilteredItems();
+    }, [handleFilteredItems, items]);
+
+    useEffect(() => {
+        handleFilteredItems();
+    }, [handleFilteredItems, yearFilter, monthFilter]);
+
 
     useEffect(() => {
         async function fetchData() {
@@ -127,7 +130,8 @@ export default function CostsApplication() {
                 <div className="mb-[20px] flex justify-between">
                     <label className="text-purple-100">Year:</label>
                     <select className="w-[180px] pl-[4px]" onChange={e => setYear(Number(e.target.value))}>
-                        {constants.YEARS.map((yearItem, index) => <option key={index} value={yearItem}>{yearItem}</option>)}
+                        {constants.YEARS.map((yearItem, index) => <option key={index}
+                                                                          value={yearItem}>{yearItem}</option>)}
                     </select>
                 </div>
                 <div className="mb-[20px] flex justify-between">
@@ -182,7 +186,7 @@ export default function CostsApplication() {
                             <span>{constants.MONTHS.find(x => x.value === item.month).key}</span>
                             <span>{item.year}</span>
                             <span>{item.sum}$</span>
-                            <span>{item.description}</span>
+                            <span className="break-all">{item.description}</span>
                         </div>)}
                 </div>
             </div>
